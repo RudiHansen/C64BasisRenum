@@ -1,22 +1,29 @@
-﻿using C64BasisRenum.Models;
-using System;
-using System.Collections.Generic;
+﻿using C64BasisRenum.Librarys;
+using C64BasisRenum.Models;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace C64BasisRenum.Forms
 {
     public partial class CodeViewer : Form
     {
         private BindingList<BasicLine> BasicLinesBinding = new();
-        public CodeViewer(BasicLines basicLines)
+        public CodeViewer()
         {
             InitializeComponent();
+
+        }
+
+        private void CodeViewer_Load(object sender, EventArgs e)
+        {
+            this.TopMost = true;
+            this.TopMost = false;
+            this.Activate();
+
+            string basicInputFile = FileHelper.GetFileName();
+            //string basicInputFile = @"C:\Users\RSH\OneDrive\Development\C64\Sorter\BASIC Files\TestSort02.bas";
+            string basicFileContent = File.ReadAllText(basicInputFile);
+
+            BasicLines basicLines = BasicHelper.Code2BasicLines(basicFileContent);
 
             BasicLinesBinding = new BindingList<BasicLine>(basicLines.Lines);
             dataGridView1.AutoGenerateColumns = false;
@@ -84,6 +91,7 @@ namespace C64BasisRenum.Forms
                 Width = 60
             };
             dataGridView1.Columns.Add(newGoLineNumberColumn);
+
         }
     }
 }

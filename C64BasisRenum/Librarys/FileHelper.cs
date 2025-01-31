@@ -4,10 +4,6 @@
     {
         public static string GetFileName()
         {
-            // Enable visual styles for the application
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             // Open the file with the Basic program to renumber
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
