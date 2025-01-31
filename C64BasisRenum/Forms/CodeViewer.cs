@@ -1,6 +1,7 @@
 ﻿using C64BasisRenum.Librarys;
 using C64BasisRenum.Models;
 using System.ComponentModel;
+using System.Text;
 
 namespace C64BasisRenum.Forms
 {
@@ -8,6 +9,7 @@ namespace C64BasisRenum.Forms
     {
         private BasicLines basicLines = new();
         private BindingList<BasicLine> BasicLinesBinding = new();
+        private string basicInputFile = "";
         public CodeViewer()
         {
             InitializeComponent();
@@ -17,15 +19,15 @@ namespace C64BasisRenum.Forms
 
         private void CodeViewer_Load(object sender, EventArgs e)
         {
-            
+
 
 
         }
 
         private void loadBasicButton_Click(object sender, EventArgs e)
         {
-            //string basicInputFile = FileHelper.GetFileName();
-            string basicInputFile = @"C:\Users\RSH\OneDrive\Development\C64\Sorter\BASIC Files\TestSort02.bas";
+            //basicInputFile = FileHelper.GetFileName();
+            basicInputFile = @"C:\Users\RSH\OneDrive\Development\C64\Sorter\BASIC Files\TestSort02.bas";
             string basicFileContent = File.ReadAllText(basicInputFile);
 
             basicLines = BasicHelper.Code2BasicLines(basicFileContent);
@@ -113,6 +115,97 @@ namespace C64BasisRenum.Forms
         private void CodeViewer_FormClosing(object sender, FormClosingEventArgs e)
         {
             var size = this.Size;
+        }
+
+        private void setSubLinesButton_Click(object sender, EventArgs e)
+        {
+            // Ensure any pending changes in the DataGridView are committed
+            dataGridView1.EndEdit();
+
+            int subLine = 1000;
+
+            foreach (var item in basicLines.Lines.Where(x => x.SubRoutine == true))
+            {
+                item.NewLineNumber = subLine;
+                subLine += 1000;
+            }
+            // Reload data in DataGridView
+            BasicLinesBinding.ResetBindings();
+        }
+
+        private void renumberCodeButton_Click(object sender, EventArgs e)
+        {
+            // Ensure any pending changes in the DataGridView are committed
+            dataGridView1.EndEdit();
+
+            // Renumber code
+            int subLine = 10;
+            foreach (var item in basicLines.Lines)
+            {
+                // If line number is 0 then its a blank line and should keep 0
+                if (item.LineNumber == 0)
+                {
+                    item.NewLineNumber = 0;
+                    continue;
+                }
+
+                if (item.NewLineNumber == 0 || item.NewLineNumber is null)
+                {
+                    item.NewLineNumber = subLine;
+                    subLine += 10;
+                }
+                else
+                {
+                    subLine = (int)item.NewLineNumber;
+                    subLine += 10;
+                }
+            }
+
+            // Generate new line numbers for "goto" and "gosub"
+            foreach (var item in basicLines.Lines)
+            {
+                if (item.GoLineNumber is null)
+                {
+                    item.NewGoLineNumber = null;
+                }
+                else
+                {
+                    var newGoLineNumber = basicLines.Lines.FirstOrDefault(x => x.LineNumber == item.GoLineNumber)?.NewLineNumber;
+                    item.NewGoLineNumber = newGoLineNumber;
+                }
+            }
+
+            // Reload data in DataGridView
+            BasicLinesBinding.ResetBindings();
+
+        }
+
+        private void saveCodeButton_Click(object sender, EventArgs e)
+        {
+            string basicOutputFile = basicInputFile.Replace(".bas", "_renum.bas");
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var item in basicLines.Lines)
+            {
+                if (item.NewLineNumber == 0)
+                {
+                    sb.AppendLine();
+                }
+                else
+                {
+                    if (item.NewGoLineNumber is not null)
+                    {
+
+
+                        sb.AppendLine($"{item.NewLineNumber} {item.LineText.Replace(item.GoLineNumber.ToString(), item.NewGoLineNumber.ToString())}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{item.NewLineNumber} {item.LineText}");
+                    }
+                }
+            }
+            File.WriteAllText(basicOutputFile, sb.ToString());
         }
     }
 }
