@@ -7,7 +7,17 @@
         public int? GoLineNumber { get; set; }
         public int? NewLineNumber { get; set; }
         public int? NewGoLineNumber { get; set; }
+        public bool SubRoutine { get; set; }
 
+        public BasicLine()
+        {
+            LineNumber = 0;
+            LineText = "";
+            GoLineNumber = null;
+            NewLineNumber = null;
+            NewGoLineNumber = null;
+            SubRoutine = false;
+        }
     }
     public class BasicLines
     {

@@ -49,6 +49,15 @@ namespace C64BasisRenum.Forms
             };
             dataGridView1.Columns.Add(newLineNumberColumn);
 
+            DataGridViewCheckBoxColumn newSubColumn = new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "SubRoutine",
+                HeaderText = "Sub",
+                Name = "SubRoutine",
+                Width = 30
+            };
+            dataGridView1.Columns.Add(newSubColumn);
+
             DataGridViewTextBoxColumn lineTextColumn = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LineText",
