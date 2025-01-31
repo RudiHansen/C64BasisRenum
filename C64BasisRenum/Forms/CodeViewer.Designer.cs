@@ -30,6 +30,7 @@
         {
             dataGridView1 = new DataGridView();
             tableLayoutPanel1 = new TableLayoutPanel();
+            loadBasicButton = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -48,6 +49,7 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(dataGridView1, 0, 1);
+            tableLayoutPanel1.Controls.Add(loadBasicButton, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -57,6 +59,16 @@
             tableLayoutPanel1.Size = new Size(999, 450);
             tableLayoutPanel1.TabIndex = 1;
             // 
+            // loadBasicButton
+            // 
+            loadBasicButton.Location = new Point(3, 3);
+            loadBasicButton.Name = "loadBasicButton";
+            loadBasicButton.Size = new Size(128, 23);
+            loadBasicButton.TabIndex = 1;
+            loadBasicButton.Text = "Load Basic Program";
+            loadBasicButton.UseVisualStyleBackColor = true;
+            loadBasicButton.Click += loadBasicButton_Click;
+            // 
             // CodeViewer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -65,6 +77,7 @@
             Controls.Add(tableLayoutPanel1);
             Name = "CodeViewer";
             Text = "CodeViewer";
+            FormClosing += CodeViewer_FormClosing;
             Load += CodeViewer_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
@@ -75,5 +88,6 @@
 
         private DataGridView dataGridView1;
         private TableLayoutPanel tableLayoutPanel1;
+        private Button loadBasicButton;
     }
 }

@@ -1,10 +1,5 @@
 ﻿using C64BasisRenum.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace C64BasisRenum.Librarys
 {
@@ -21,7 +16,7 @@ namespace C64BasisRenum.Librarys
 
                 basicLine.LineNumber = result.LineNumber;
                 basicLine.LineText = result.RestOfLine;
-                if (basicLine.LineText.Contains("rem sub "))
+                if (basicLine.LineText.StartsWith("rem sub", StringComparison.OrdinalIgnoreCase))
                 {
                     basicLine.SubRoutine = true;
                 }
