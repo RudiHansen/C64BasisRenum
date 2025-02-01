@@ -208,11 +208,11 @@ namespace C64BasisRenum.Forms
                                 item.LineText = item.LineText.Replace(gotoGosubNumber.ToString(), item.NewGoLineNumber.ToString()); // Erstatter det gamle nummer med det nye
                             }
                         }
-                        sb.AppendLine($"{item.NewLineNumber} {item.LineText}");
+                        sb.AppendLine($"{item.NewLineNumber}{item.LineText}");
                     }
                     else
                     {
-                        sb.AppendLine($"{item.NewLineNumber} {item.LineText}");
+                        sb.AppendLine($"{item.NewLineNumber}{item.LineText}");
                     }
                 }
             }
