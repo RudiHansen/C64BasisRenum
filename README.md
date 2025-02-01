@@ -9,6 +9,8 @@ The program works now, but may not be 100% correct.\
 BUG     : If there is more than one goto/gosub on a line, then it does not change more than one linenumber.\
 ISSUE   : Automaticly locating sub rutines it not that good at the moment.\
 FEATURE : Som way of setting how the renumbering should work, like start line number and line number step.
+FEATURE : Filter options on code viewer, not quite sure how right now, but atleast an option to show only lines with subrutines.
+
 
 ## Description
 I needed to be able to renumber the line numbers in my Commodore C64 Basic Programs.\

@@ -16,7 +16,7 @@ namespace C64BasisRenum.Librarys
 
                 basicLine.LineNumber = result.LineNumber;
                 basicLine.LineText = result.RestOfLine;
-                if (basicLine.LineText.StartsWith("rem sub", StringComparison.OrdinalIgnoreCase))
+                if (basicLine.LineText.StartsWith(" rem sub", StringComparison.OrdinalIgnoreCase))
                 {
                     basicLine.SubRoutine = true;
                 }
@@ -35,7 +35,7 @@ namespace C64BasisRenum.Librarys
             }
 
             // Matcher linjenummer + resten af linjen (uden at fjerne "gosub 8000" fra "RestOfLine")
-            var match = Regex.Match(input, @"^(?<LineNumber>\d+)\s*(?<RestOfLine>.*)", RegexOptions.IgnoreCase);
+            var match = Regex.Match(input, @"^(?<LineNumber>\d+)(?<RestOfLine>.*)", RegexOptions.IgnoreCase);
 
             if (match.Success)
             {
