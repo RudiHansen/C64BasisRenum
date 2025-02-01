@@ -39,6 +39,14 @@ It should produce this.\
 1000 rem Sub do work\
 1010 i=0\
 1020 j=0\
+
+## 💬 Feedback & Contributions  
+I’d love to hear your thoughts! If you try this out, please:  
+✅ Open an **issue** for suggestions, feedback, or bug reports.  
+✅ Start a **GitHub Discussion** if you have questions (if enabled).  
+✅ Star ⭐ the repo if you find it useful!  
+
+Your feedback helps improve this project—don’t hesitate to share your thoughts! 🚀  
 1030 return
 
 And also be able to change the gosub and goto statements to have the right number.
