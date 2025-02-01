@@ -2,6 +2,7 @@
 using C64BasisRenum.Models;
 using System.ComponentModel;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace C64BasisRenum.Forms
 {
@@ -195,9 +196,19 @@ namespace C64BasisRenum.Forms
                 {
                     if (item.NewGoLineNumber is not null)
                     {
+                        // Finder "goto", "gosub" eller "then" efterfulgt af et nummer
+                        MatchCollection matches = Regex.Matches(item.LineText, @"\b(?:goto|gosub|then)\s+(?<GotoGosub>\d+)", RegexOptions.IgnoreCase);
 
-
-                        sb.AppendLine($"{item.NewLineNumber} {item.LineText.Replace(item.GoLineNumber.ToString(), item.NewGoLineNumber.ToString())}");
+                        foreach (Match match in matches)
+                        {
+                            if (match.Success)
+                            {
+                                int gotoGosubNumber = int.Parse(match.Groups["GotoGosub"].Value); // Henter nummeret
+                                var newGoLineNumber = basicLines.Lines.FirstOrDefault(x => x.LineNumber == gotoGosubNumber)?.NewLineNumber; // Henter det nye nummer
+                                item.LineText = item.LineText.Replace(gotoGosubNumber.ToString(), item.NewGoLineNumber.ToString()); // Erstatter det gamle nummer med det nye
+                            }
+                        }
+                        sb.AppendLine($"{item.NewLineNumber} {item.LineText}");
                     }
                     else
                     {
