@@ -28,33 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dataGridView1 = new DataGridView();
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox1 = new GroupBox();
+            saveCodeButton = new Button();
             renumberCodeButton = new Button();
             setSubLinesButton = new Button();
             loadBasicButton = new Button();
-            saveCodeButton = new Button();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            advancedDataGridView1 = new Zuby.ADGV.AdvancedDataGridView();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)advancedDataGridView1).BeginInit();
             SuspendLayout();
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(3, 103);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(993, 344);
-            dataGridView1.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(dataGridView1, 0, 1);
             tableLayoutPanel1.Controls.Add(groupBox1, 0, 0);
+            tableLayoutPanel1.Controls.Add(advancedDataGridView1, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -76,6 +67,16 @@
             groupBox1.Size = new Size(993, 94);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
+            // 
+            // saveCodeButton
+            // 
+            saveCodeButton.Location = new Point(403, 9);
+            saveCodeButton.Name = "saveCodeButton";
+            saveCodeButton.Size = new Size(128, 23);
+            saveCodeButton.TabIndex = 5;
+            saveCodeButton.Text = "Save Code";
+            saveCodeButton.UseVisualStyleBackColor = true;
+            saveCodeButton.Click += saveCodeButton_Click;
             // 
             // renumberCodeButton
             // 
@@ -107,15 +108,20 @@
             loadBasicButton.UseVisualStyleBackColor = true;
             loadBasicButton.Click += loadBasicButton_Click;
             // 
-            // saveCodeButton
+            // advancedDataGridView1
             // 
-            saveCodeButton.Location = new Point(403, 9);
-            saveCodeButton.Name = "saveCodeButton";
-            saveCodeButton.Size = new Size(128, 23);
-            saveCodeButton.TabIndex = 5;
-            saveCodeButton.Text = "Save Code";
-            saveCodeButton.UseVisualStyleBackColor = true;
-            saveCodeButton.Click += saveCodeButton_Click;
+            advancedDataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            advancedDataGridView1.Dock = DockStyle.Fill;
+            advancedDataGridView1.FilterAndSortEnabled = true;
+            advancedDataGridView1.FilterStringChangedInvokeBeforeDatasourceUpdate = true;
+            advancedDataGridView1.Location = new Point(3, 103);
+            advancedDataGridView1.MaxFilterButtonImageHeight = 23;
+            advancedDataGridView1.Name = "advancedDataGridView1";
+            advancedDataGridView1.RightToLeft = RightToLeft.No;
+            advancedDataGridView1.Size = new Size(993, 344);
+            advancedDataGridView1.SortStringChangedInvokeBeforeDatasourceUpdate = true;
+            advancedDataGridView1.TabIndex = 2;
+            advancedDataGridView1.FilterStringChanged += advancedDataGridView1_FilterStringChanged;
             // 
             // CodeViewer
             // 
@@ -127,20 +133,19 @@
             Text = "CodeViewer";
             FormClosing += CodeViewer_FormClosing;
             Load += CodeViewer_Load;
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)advancedDataGridView1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private DataGridView dataGridView1;
         private TableLayoutPanel tableLayoutPanel1;
         private GroupBox groupBox1;
         private Button loadBasicButton;
         private Button setSubLinesButton;
         private Button renumberCodeButton;
         private Button saveCodeButton;
+        private Zuby.ADGV.AdvancedDataGridView advancedDataGridView1;
     }
 }

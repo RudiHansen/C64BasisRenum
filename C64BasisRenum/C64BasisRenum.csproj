@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.30115.18" />
+  </ItemGroup>
+
 </Project>

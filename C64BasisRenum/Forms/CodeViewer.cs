@@ -1,15 +1,16 @@
 ﻿using C64BasisRenum.Librarys;
 using C64BasisRenum.Models;
-using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace C64BasisRenum.Forms
 {
     public partial class CodeViewer : Form
     {
         private BasicLines basicLines = new();
-        private BindingList<BasicLine> BasicLinesBinding = new();
+        private DataTable dataTable = new();
+        private BindingSource bindingSource = new();
         private string basicInputFile = "";
         public CodeViewer()
         {
@@ -33,18 +34,121 @@ namespace C64BasisRenum.Forms
 
             basicLines = BasicHelper.Code2BasicLines(basicFileContent);
 
-            BasicLinesBinding = new BindingList<BasicLine>(basicLines.Lines);
-            dataGridView1.DataSource = BasicLinesBinding;
+            PopulateDataTable();
+        }
+        private void PopulateDataTable()
+        {
+            dataTable.Rows.Clear();
+            dataTable.Columns.Clear();
+
+            if (dataTable.Columns.Count == 0)
+            {
+                // Define table structure
+                dataTable.Columns.Add("LineNumber", typeof(int));
+                dataTable.Columns.Add("LineText", typeof(string));
+                dataTable.Columns.Add("GoLineNumber", typeof(int));
+                dataTable.Columns.Add("NewLineNumber", typeof(int));
+                dataTable.Columns.Add("NewGoLineNumber", typeof(int));
+                dataTable.Columns.Add("SubRoutine", typeof(bool));
+                // Hidden column to store original BasicLine reference
+                dataTable.Columns.Add("OriginalObject", typeof(BasicLine));
+            }
+
+            // Mark all rows as "unchanged" to prevent potential issues
+            dataTable.AcceptChanges();
+
+            // Load your data
+            foreach (var basicLine in basicLines.Lines)
+            {
+                dataTable.Rows.Add(basicLine.LineNumber, basicLine.LineText, basicLine.GoLineNumber, basicLine.NewLineNumber, basicLine.NewGoLineNumber, basicLine.SubRoutine, basicLine);
+            }
+
+            // Bind to BindingSource
+            bindingSource.DataSource = dataTable;
+            advancedDataGridView1.DataSource = bindingSource;
+        }
+
+        private void SyncDataTableToBasicLines()
+        {
+            TimeCodeExecution timeCodeExecution = new();
+            timeCodeExecution.Start("SyncDataTableToBasicLines");
+            basicLines.Lines.Clear(); // Clear old data
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                var basicLine = new BasicLine
+                {
+                    LineNumber = row.Field<int>("LineNumber"),
+                    LineText = row.Field<string>("LineText"),
+                    GoLineNumber = row.Field<int?>("GoLineNumber"),
+                    NewLineNumber = row.Field<int?>("NewLineNumber"),
+                    NewGoLineNumber = row.Field<int?>("NewGoLineNumber"),
+                    SubRoutine = row.Field<bool>("SubRoutine")
+                };
+
+                basicLines.Lines.Add(basicLine);
+            }
+            timeCodeExecution.Stop();
+        }
+        private void SyncDataTableToBasicLines2()
+        {
+            TimeCodeExecution timeCodeExecution = new();
+            timeCodeExecution.Start("SyncDataTableToBasicLines2");
+            // Track processed items
+            HashSet<BasicLine> updatedLines = new HashSet<BasicLine>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                // Retrieve the original BasicLine object stored in the row
+                if (row.RowState == DataRowState.Deleted)
+                    continue; // Skip deleted rows
+
+                BasicLine? basicLine = row["OriginalObject"] as BasicLine;
+
+                if (basicLine != null)
+                {
+                    // ✅ Update existing BasicLine object
+                    basicLine.LineNumber = row.Field<int>("LineNumber");
+                    basicLine.LineText = row.Field<string>("LineText");
+                    basicLine.GoLineNumber = row.Field<int?>("GoLineNumber");
+                    basicLine.NewLineNumber = row.Field<int?>("NewLineNumber");
+                    basicLine.NewGoLineNumber = row.Field<int?>("NewGoLineNumber");
+                    basicLine.SubRoutine = row.Field<bool>("SubRoutine");
+
+                    updatedLines.Add(basicLine);
+                }
+                else
+                {
+                    // ✅ Add new BasicLine if it doesn’t exist
+                    var newLine = new BasicLine
+                    {
+                        LineNumber = row.Field<int>("LineNumber"),
+                        LineText = row.Field<string>("LineText"),
+                        GoLineNumber = row.Field<int?>("GoLineNumber"),
+                        NewLineNumber = row.Field<int?>("NewLineNumber"),
+                        NewGoLineNumber = row.Field<int?>("NewGoLineNumber"),
+                        SubRoutine = row.Field<bool>("SubRoutine")
+                    };
+
+                    basicLines.Lines.Add(newLine);
+                    row["OriginalObject"] = newLine; // Store reference for future updates
+                    updatedLines.Add(newLine);
+                }
+            }
+
+            // ✅ Remove deleted lines
+            basicLines.Lines.RemoveAll(line => !updatedLines.Contains(line));
+            timeCodeExecution.Stop();
         }
         private void SetupDataGridView()
         {
-            dataGridView1.AutoGenerateColumns = false;
+            advancedDataGridView1.AutoGenerateColumns = false;
 
             // Set the font for the entire DataGridView
-            dataGridView1.DefaultCellStyle.Font = new Font("Consolas", 10);
+            advancedDataGridView1.DefaultCellStyle.Font = new Font("Consolas", 10);
 
             // Remove horizontal lines
-            dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            advancedDataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
             // Define columns manually
             DataGridViewTextBoxColumn lineNumberColumn = new DataGridViewTextBoxColumn
@@ -55,7 +159,7 @@ namespace C64BasisRenum.Forms
                 Width = 60,
                 DefaultCellStyle = new DataGridViewCellStyle { ForeColor = Color.Red }
             };
-            dataGridView1.Columns.Add(lineNumberColumn);
+            advancedDataGridView1.Columns.Add(lineNumberColumn);
 
             DataGridViewTextBoxColumn newLineNumberColumn = new DataGridViewTextBoxColumn
             {
@@ -65,7 +169,7 @@ namespace C64BasisRenum.Forms
                 Width = 60,
                 DefaultCellStyle = new DataGridViewCellStyle { ForeColor = Color.Blue }
             };
-            dataGridView1.Columns.Add(newLineNumberColumn);
+            advancedDataGridView1.Columns.Add(newLineNumberColumn);
 
             DataGridViewCheckBoxColumn newSubColumn = new DataGridViewCheckBoxColumn
             {
@@ -74,7 +178,7 @@ namespace C64BasisRenum.Forms
                 Name = "SubRoutine",
                 Width = 30
             };
-            dataGridView1.Columns.Add(newSubColumn);
+            advancedDataGridView1.Columns.Add(newSubColumn);
 
             DataGridViewTextBoxColumn lineTextColumn = new DataGridViewTextBoxColumn
             {
@@ -83,7 +187,7 @@ namespace C64BasisRenum.Forms
                 Name = "LineTextColumn",
                 Width = 680
             };
-            dataGridView1.Columns.Add(lineTextColumn);
+            advancedDataGridView1.Columns.Add(lineTextColumn);
 
             DataGridViewTextBoxColumn goLineNumberColumn = new DataGridViewTextBoxColumn
             {
@@ -92,7 +196,7 @@ namespace C64BasisRenum.Forms
                 Name = "GoLineNumberColumn",
                 Width = 60
             };
-            dataGridView1.Columns.Add(goLineNumberColumn);
+            advancedDataGridView1.Columns.Add(goLineNumberColumn);
 
             DataGridViewTextBoxColumn newGoLineNumberColumn = new DataGridViewTextBoxColumn
             {
@@ -101,7 +205,7 @@ namespace C64BasisRenum.Forms
                 Name = "NewGoLineNumberColumn",
                 Width = 60
             };
-            dataGridView1.Columns.Add(newGoLineNumberColumn);
+            advancedDataGridView1.Columns.Add(newGoLineNumberColumn);
         }
         private void SetupForm()
         {
@@ -112,16 +216,15 @@ namespace C64BasisRenum.Forms
             this.TopMost = false;
             this.Activate();
         }
-
         private void CodeViewer_FormClosing(object sender, FormClosingEventArgs e)
         {
             var size = this.Size;
         }
-
         private void setSubLinesButton_Click(object sender, EventArgs e)
         {
             // Ensure any pending changes in the DataGridView are committed
-            dataGridView1.EndEdit();
+            advancedDataGridView1.EndEdit();
+            SyncDataTableToBasicLines();
 
             int subLine = 1000;
 
@@ -130,14 +233,14 @@ namespace C64BasisRenum.Forms
                 item.NewLineNumber = subLine;
                 subLine += 1000;
             }
-            // Reload data in DataGridView
-            BasicLinesBinding.ResetBindings();
-        }
 
+            PopulateDataTable();
+        }
         private void renumberCodeButton_Click(object sender, EventArgs e)
         {
             // Ensure any pending changes in the DataGridView are committed
-            dataGridView1.EndEdit();
+            advancedDataGridView1.EndEdit();
+            SyncDataTableToBasicLines();
 
             // Renumber code
             int subLine = 10;
@@ -175,14 +278,12 @@ namespace C64BasisRenum.Forms
                     item.NewGoLineNumber = newGoLineNumber;
                 }
             }
-
-            // Reload data in DataGridView
-            BasicLinesBinding.ResetBindings();
-
+            PopulateDataTable();
         }
-
         private void saveCodeButton_Click(object sender, EventArgs e)
         {
+            SyncDataTableToBasicLines();
+
             string basicOutputFile = basicInputFile.Replace(".bas", "_renum.bas");
             StringBuilder sb = new StringBuilder();
 
@@ -217,6 +318,26 @@ namespace C64BasisRenum.Forms
                 }
             }
             File.WriteAllText(basicOutputFile, sb.ToString());
+        }
+        private void advancedDataGridView1_FilterStringChanged(object sender, Zuby.ADGV.AdvancedDataGridView.FilterEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(advancedDataGridView1.FilterString))
+            {
+                try
+                {
+                    // Use DataView's RowFilter (Automatically handles filtering)
+                    (bindingSource.DataSource as DataTable).DefaultView.RowFilter = advancedDataGridView1.FilterString;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error applying filter: " + ex.Message);
+                }
+            }
+            else
+            {
+                // Clear filter if no condition is set
+                (bindingSource.DataSource as DataTable).DefaultView.RowFilter = string.Empty;
+            }
         }
     }
 }
