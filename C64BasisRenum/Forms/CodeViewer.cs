@@ -21,15 +21,31 @@ namespace C64BasisRenum.Forms
 
         private void CodeViewer_Load(object sender, EventArgs e)
         {
+            lineNoStartUpDown.Minimum = 1;
+            lineNoStartUpDown.Maximum = 10000;
+            lineNoStartUpDown.DecimalPlaces = 0;
+            lineNoStartUpDown.Value = 10;
 
+            lineNoStepUpDown.Minimum = 1;
+            lineNoStepUpDown.Maximum = 10000;
+            lineNoStepUpDown.DecimalPlaces = 0;
+            lineNoStepUpDown.Value = 10;
 
+            subNoStartUpDown.Minimum = 1;
+            subNoStartUpDown.Maximum = 100000;
+            subNoStartUpDown.DecimalPlaces = 0;
+            subNoStartUpDown.Value = 1000;
 
+            subNoStepUpDown.Minimum = 1;
+            subNoStepUpDown.Maximum = 10000;
+            subNoStepUpDown.DecimalPlaces = 0;
+            subNoStepUpDown.Value = 1000;
         }
 
         private void loadBasicButton_Click(object sender, EventArgs e)
         {
-            //basicInputFile = FileHelper.GetFileName();
-            basicInputFile = @"C:\Users\RSH\OneDrive\Development\C64\Sorter\BASIC Files\TestSort02.bas";
+            basicInputFile = FileHelper.GetFileName();
+            //basicInputFile = @"C:\Users\RSH\OneDrive\Development\C64\Sorter\BASIC Files\TestSort02.bas";
             string basicFileContent = File.ReadAllText(basicInputFile);
 
             basicLines = BasicHelper.Code2BasicLines(basicFileContent);
@@ -226,12 +242,13 @@ namespace C64BasisRenum.Forms
             advancedDataGridView1.EndEdit();
             SyncDataTableToBasicLines();
 
-            int subLine = 1000;
+            int subNoStart = (int)subNoStartUpDown.Value;
+            int subNoStep = (int)subNoStepUpDown.Value;
 
             foreach (var item in basicLines.Lines.Where(x => x.SubRoutine == true))
             {
-                item.NewLineNumber = subLine;
-                subLine += 1000;
+                item.NewLineNumber = subNoStart;
+                subNoStart += subNoStep;
             }
 
             PopulateDataTable();
@@ -243,7 +260,9 @@ namespace C64BasisRenum.Forms
             SyncDataTableToBasicLines();
 
             // Renumber code
-            int subLine = 10;
+            int lineNoStart = (int)lineNoStartUpDown.Value;
+            int lineNoStep = (int)lineNoStepUpDown.Value;
+
             foreach (var item in basicLines.Lines)
             {
                 // If line number is 0 then its a blank line and should keep 0
@@ -255,13 +274,13 @@ namespace C64BasisRenum.Forms
 
                 if (item.NewLineNumber == 0 || item.NewLineNumber is null)
                 {
-                    item.NewLineNumber = subLine;
-                    subLine += 10;
+                    item.NewLineNumber = lineNoStart;
+                    lineNoStart += lineNoStep;
                 }
                 else
                 {
-                    subLine = (int)item.NewLineNumber;
-                    subLine += 10;
+                    lineNoStart = (int)item.NewLineNumber;
+                    lineNoStart += 10;
                 }
             }
 

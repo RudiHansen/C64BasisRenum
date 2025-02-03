@@ -30,6 +30,14 @@
         {
             tableLayoutPanel1 = new TableLayoutPanel();
             groupBox1 = new GroupBox();
+            subNoStepUpDown = new NumericUpDown();
+            subNoStepLabel = new Label();
+            subNoStartUpDown = new NumericUpDown();
+            subNoStartLabel = new Label();
+            lineNoStepUpDown = new NumericUpDown();
+            lineNoStepLabel = new Label();
+            lineNoStartUpDown = new NumericUpDown();
+            lineNoStartLabel = new Label();
             saveCodeButton = new Button();
             renumberCodeButton = new Button();
             setSubLinesButton = new Button();
@@ -37,6 +45,10 @@
             advancedDataGridView1 = new Zuby.ADGV.AdvancedDataGridView();
             tableLayoutPanel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)subNoStepUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)subNoStartUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lineNoStepUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lineNoStartUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)advancedDataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -57,6 +69,14 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(subNoStepUpDown);
+            groupBox1.Controls.Add(subNoStepLabel);
+            groupBox1.Controls.Add(subNoStartUpDown);
+            groupBox1.Controls.Add(subNoStartLabel);
+            groupBox1.Controls.Add(lineNoStepUpDown);
+            groupBox1.Controls.Add(lineNoStepLabel);
+            groupBox1.Controls.Add(lineNoStartUpDown);
+            groupBox1.Controls.Add(lineNoStartLabel);
             groupBox1.Controls.Add(saveCodeButton);
             groupBox1.Controls.Add(renumberCodeButton);
             groupBox1.Controls.Add(setSubLinesButton);
@@ -67,6 +87,70 @@
             groupBox1.Size = new Size(993, 94);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
+            // 
+            // subNoStepUpDown
+            // 
+            subNoStepUpDown.Location = new Point(910, 36);
+            subNoStepUpDown.Name = "subNoStepUpDown";
+            subNoStepUpDown.Size = new Size(80, 23);
+            subNoStepUpDown.TabIndex = 13;
+            // 
+            // subNoStepLabel
+            // 
+            subNoStepLabel.AutoSize = true;
+            subNoStepLabel.Location = new Point(835, 38);
+            subNoStepLabel.Name = "subNoStepLabel";
+            subNoStepLabel.Size = new Size(66, 15);
+            subNoStepLabel.TabIndex = 12;
+            subNoStepLabel.Text = "Subno step";
+            // 
+            // subNoStartUpDown
+            // 
+            subNoStartUpDown.Location = new Point(910, 11);
+            subNoStartUpDown.Name = "subNoStartUpDown";
+            subNoStartUpDown.Size = new Size(80, 23);
+            subNoStartUpDown.TabIndex = 11;
+            // 
+            // subNoStartLabel
+            // 
+            subNoStartLabel.AutoSize = true;
+            subNoStartLabel.Location = new Point(835, 13);
+            subNoStartLabel.Name = "subNoStartLabel";
+            subNoStartLabel.Size = new Size(67, 15);
+            subNoStartLabel.TabIndex = 10;
+            subNoStartLabel.Text = "Subno start";
+            // 
+            // lineNoStepUpDown
+            // 
+            lineNoStepUpDown.Location = new Point(733, 36);
+            lineNoStepUpDown.Name = "lineNoStepUpDown";
+            lineNoStepUpDown.Size = new Size(80, 23);
+            lineNoStepUpDown.TabIndex = 9;
+            // 
+            // lineNoStepLabel
+            // 
+            lineNoStepLabel.AutoSize = true;
+            lineNoStepLabel.Location = new Point(658, 38);
+            lineNoStepLabel.Name = "lineNoStepLabel";
+            lineNoStepLabel.Size = new Size(68, 15);
+            lineNoStepLabel.TabIndex = 8;
+            lineNoStepLabel.Text = "Lineno step";
+            // 
+            // lineNoStartUpDown
+            // 
+            lineNoStartUpDown.Location = new Point(733, 11);
+            lineNoStartUpDown.Name = "lineNoStartUpDown";
+            lineNoStartUpDown.Size = new Size(80, 23);
+            lineNoStartUpDown.TabIndex = 7;
+            // 
+            // lineNoStartLabel
+            // 
+            lineNoStartLabel.AutoSize = true;
+            lineNoStartLabel.Location = new Point(658, 13);
+            lineNoStartLabel.Name = "lineNoStartLabel";
+            lineNoStartLabel.Size = new Size(69, 15);
+            lineNoStartLabel.TabIndex = 6;
+            lineNoStartLabel.Text = "Lineno start";
             // 
             // saveCodeButton
             // 
@@ -135,6 +219,11 @@
             Load += CodeViewer_Load;
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)subNoStepUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)subNoStartUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lineNoStepUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lineNoStartUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)advancedDataGridView1).EndInit();
             ResumeLayout(false);
         }
@@ -147,5 +236,13 @@
         private Button renumberCodeButton;
         private Button saveCodeButton;
         private Zuby.ADGV.AdvancedDataGridView advancedDataGridView1;
+        private Label lineNoStartLabel;
+        private NumericUpDown subNoStepUpDown;
+        private Label subNoStepLabel;
+        private NumericUpDown subNoStartUpDown;
+        private Label subNoStartLabel;
+        private NumericUpDown lineNoStepUpDown;
+        private Label lineNoStepLabel;
+        private NumericUpDown lineNoStartUpDown;
     }
 }
